@@ -49,7 +49,32 @@ const create = async (req, res) => {
 }
 
 const update = async (req, res) => {
-    
+    console.log(req.body);
+    try {
+        // const book = await Book.findOne({ title: req.body.title });
+        // console.log(book);
+
+        // book.author = req.body.author;
+        // book.pages = req.body.pages;
+        // book.isbn = req.body.isbn;
+        // book.genre = req.body.genre;
+        // book.price = req.body.price;
+
+        // // Save new book info
+        // const savedBook = await book.save();
+
+        const updatedBook = await Book.updateOne({ title: req.body.title }, req.body);
+        const book = await Book.findOne({title: req.body.title});
+
+        console.log(book);
+
+        res.redirect(`/api/books/${book.id}`);
+
+    } catch (error) {
+        console.log('Error in UPDATE route');
+        console.log(error);
+        return res.status(400).json({ message: 'Could not update. Please try again.'});
+    }    
 }
 
 const deleteBook = async (req, res) => {
@@ -71,7 +96,9 @@ router.get('/:id', show);
 // POST -> api/books
 router.post('/', passport.authenticate('jwt', { session: false }), create);
 
-// router.put('/books/:id', passport.authenticate('jwt', { session: false }), update);
+// PUT -> api/books
+router.put('/', passport.authenticate('jwt', { session: false }), update);
+
 // router.delete('/books/:id', passport.authenticate('jwt', { session: false }), deleteBook);
 
 module.exports = router;
