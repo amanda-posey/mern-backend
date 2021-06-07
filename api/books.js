@@ -1,6 +1,7 @@
 // Imports
 require('dotenv').config();
 const express = require('express');
+const { deleteModel } = require('mongoose');
 const router = express.Router();
 const passport = require('passport');
 
@@ -78,7 +79,17 @@ const update = async (req, res) => {
 }
 
 const deleteBook = async (req, res) => {
-    
+    const { id } = req.params;
+    try {
+        console.log(id);
+        const result = await Book.findByIdAndRemove(id);
+        console.log(result);
+        res.redirect('/api/books');
+    } catch (error) {
+        console.log('In DELETE route');
+        console.log(error);
+        return res.status(400).json({ message: 'Book not removed. Please try again.'});
+    }
 }
 
 
@@ -99,6 +110,7 @@ router.post('/', passport.authenticate('jwt', { session: false }), create);
 // PUT -> api/books
 router.put('/', passport.authenticate('jwt', { session: false }), update);
 
-// router.delete('/books/:id', passport.authenticate('jwt', { session: false }), deleteBook);
+// DELETE -> api/books/:id
+router.delete('/:id', passport.authenticate('jwt', { session: false }), deleteBook);
 
 module.exports = router;
