@@ -35,7 +35,17 @@ const show = async (req, res) => {
 }
 
 const create = async (req, res) => {
+    const { title, author, price, pages, isbn, genre } = req.body;
 
+    try {
+        const newBook = await Book.create(req.body);
+        console.log('new book created', newBook);
+        res.json({ book: newBook });
+    } catch (error) {
+        console.log('Error inside POST /api/books');
+        console.log(error);
+        return res.status(400).json({ message: 'An error has occurred. Please try again.'})
+    }
 }
 
 const update = async (req, res) => {
@@ -58,7 +68,9 @@ router.get('/', passport.authenticate('jwt', {session: false}), index);
 // GET -> api/books/:id
 router.get('/:id', show);
 
-// router.post('/books', passport.authenticate('jwt', { session: false }), create);
+// POST -> api/books
+router.post('/', passport.authenticate('jwt', { session: false }), create);
+
 // router.put('/books/:id', passport.authenticate('jwt', { session: false }), update);
 // router.delete('/books/:id', passport.authenticate('jwt', { session: false }), deleteBook);
 
