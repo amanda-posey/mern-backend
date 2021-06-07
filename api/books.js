@@ -2,17 +2,23 @@
 require('dotenv').config();
 const express = require('express');
 const router = express.Router();
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 const passport = require('passport');
-const JWT_SECRET = process.env.JWT_SECRET;
 
 // Models
-const { } = require('../models');
+const { Book } = require('../models');
 
 // Controllers
 const index = async (req, res) => {
+    console.log('In /api/books')
+    try {
+        const allBooks = await Book.find({});
 
+        res.json({ books: allBooks });
+    } catch (error) {
+        console.log('Error in /api/books');
+        console.log(error);
+        return res.status(400).json({ message: 'Books not found. Please try again.'});
+    }
 }
 
 const show = async (req, res) => {
