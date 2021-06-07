@@ -43,10 +43,12 @@ router.get('/test', (req, res) => {
     res.json({ msg: 'Books endpoint OK!'});
 });
 
-router.get('/books', index);
-router.get('/books/:id', show);
-router.post('/books', passport.authenticate('jwt', { session: false }), create);
-router.put('/books/:id', passport.authenticate('jwt', { session: false }), update);
-router.delete('/books/:id', passport.authenticate('jwt', { session: false }), deleteBook);
+// GET -> api/books
+router.get('/', index); // route is currently not protected
+
+// router.get('/books/:id', show);
+// router.post('/books', passport.authenticate('jwt', { session: false }), create);
+// router.put('/books/:id', passport.authenticate('jwt', { session: false }), update);
+// router.delete('/books/:id', passport.authenticate('jwt', { session: false }), deleteBook);
 
 module.exports = router;
