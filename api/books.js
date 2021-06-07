@@ -22,7 +22,16 @@ const index = async (req, res) => {
 }
 
 const show = async (req, res) => {
-    
+    const { id } = req.params;
+    try {
+        // look for book by id
+    const book = await Book.findById(id);
+    res.json({ book });
+    } catch (error) {
+        console.log('Error in /api/books/:id');
+        console.log(error);
+        res.status(400).json({ message: 'Book not found. Please try again.'});
+    }
 }
 
 const create = async (req, res) => {
@@ -44,9 +53,11 @@ router.get('/test', (req, res) => {
 });
 
 // GET -> api/books
-router.get('/', index); // route is currently not protected
+router.get('/', passport.authenticate('jwt', {session: false}), index); 
 
-// router.get('/books/:id', show);
+// GET -> api/books/:id
+router.get('/:id', show);
+
 // router.post('/books', passport.authenticate('jwt', { session: false }), create);
 // router.put('/books/:id', passport.authenticate('jwt', { session: false }), update);
 // router.delete('/books/:id', passport.authenticate('jwt', { session: false }), deleteBook);
